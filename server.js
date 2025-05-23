@@ -20,6 +20,11 @@ const adminCoursesRouter = require('./routes/admin_courses');
 const apiRoutes = require('./routes/api');
 const sendMail = require('./utils/sendMail');
 require('dotenv').config();
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
 
 
 
