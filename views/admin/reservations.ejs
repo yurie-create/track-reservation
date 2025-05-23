@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>予約一覧（管理者）</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1em;
+    }
+
+    button {
+  margin: 15px;
+  padding: 10px 15px;
+  border: none;
+  background-color: #2ecc71;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #27ae60;
+}
+
+
+    .accordion-container {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 700px;
+  margin: 0 auto 40px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.accordion {
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.accordion h3 {
+  background: #3498db;
+  color: white;
+  padding: 10px 15px;
+  margin: 0;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 5px 5px 0 0;
+  margin-top: 10px;
+}
+.accordion h3.active {
+  background: #2980b9;
+}
+.accordion .panel {
+  background: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  border: 1px solid #ddd;
+  border-top: none;
+  padding: 0 15px;
+  border-radius: 0 0 5px 5px;
+}
+.accordion .panel.open {
+  padding: 15px;
+  max-height: 200px;       /* ← ここを変更 */
+  overflow-y: auto;        /* ← ここを追加 */
+}
+.accordion .reservation-item {
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+.accordion .reservation-item:last-child {
+  border-bottom: none;
+}
+    
+   
+    
+  </style>
+</head>
+<body>
+  <h1>予約一覧（管理者）</h1>
+
+  <div class="accordion-container">
+    <div id="monthNav" style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+      <button id="prevMonthBtn">◀</button>
+      <div id="currentMonthDisplay" style="min-width: 120px; text-align: center; font-weight: bold;"></div>
+      <button id="nextMonthBtn">▶︎</button>
+    </div>
+    <div class="accordion">
+      <% const grouped = {}; %>
+      <% reservations.forEach(r => { %>
+        <% if (!grouped[r.date]) grouped[r.date] = []; %>
+        <% grouped[r.date].push(r); %>
+      <% }); %>
+
+      <% const sortedDates = Object.keys(grouped).sort(); %>
+      <% sortedDates.forEach(date => { 
+        const month = date.slice(0, 7);
+      %>
+        <div class="accordion-item" data-month="<%= month %>">
+          <h3><%= date %>（<%= grouped[date].length %>件）</h3>
+          <div class="panel">
+            <% grouped[date].forEach(r => { %>
+              <div class="reservation-item">
+                <strong><%= r.name %></strong>（<%= r.email %>）<br>
+                <%= r.coach_name %> / <%= r.course_name %> / <%= r.location_name %><br>
+                <%= r.timeslot %>
+                <% if (r.reservation_status === 'waitlist') { %>
+                  <span class="waitlist">（キャンセル待ち）</span>
+                <% } %>
+                <% if (r.note) { %><br>備考: <%= r.note %><% } %>
+              </div>
+            <% }); %>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+
+  <div style="text-align: center;">
+  <form action="/admin/export-reservations-csv" method="get">
+    <button type="submit">予約データCSVダウンロード</button>
+  </form>
+  </div>
+
+  <script>
+    const months = Array.from(new Set(
+      Array.from(document.querySelectorAll('.accordion-item')).map(item => item.dataset.month)
+    )).sort();
+
+    const today = new Date();
+    const padZero = num => num < 10 ? '0' + num : num;
+    const formatYearMonth = ym => ym.slice(0,4) + '年' + ym.slice(5,7) + '月';
+
+    let currentMonthIndex = months.indexOf(today.toISOString().slice(0,7));
+    if(currentMonthIndex === -1) currentMonthIndex = 0;
+
+    const prevBtn = document.getElementById('prevMonthBtn');
+    const nextBtn = document.getElementById('nextMonthBtn');
+    const currentMonthDisplay = document.getElementById('currentMonthDisplay');
+
+    function updateDisplay() {
+      const month = months[currentMonthIndex];
+      currentMonthDisplay.textContent = formatYearMonth(month);
+
+      document.querySelectorAll('.accordion-item').forEach(item => {
+        item.style.display = (item.dataset.month === month) ? '' : 'none';
+      });
+
+      prevBtn.disabled = (currentMonthIndex === 0);
+      nextBtn.disabled = (currentMonthIndex === months.length - 1);
+
+      document.querySelectorAll('.accordion h3.active').forEach(h3 => {
+        h3.classList.remove('active');
+        h3.nextElementSibling.classList.remove('open');
+      });
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if(currentMonthIndex > 0) {
+        currentMonthIndex--;
+        updateDisplay();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if(currentMonthIndex < months.length - 1) {
+        currentMonthIndex++;
+        updateDisplay();
+      }
+    });
+
+    document.querySelectorAll('.accordion-item h3').forEach(header => {
+      header.addEventListener('click', () => {
+        header.classList.toggle('active');
+        const panel = header.nextElementSibling;
+        panel.classList.toggle('open');
+      });
+    });
+
+    updateDisplay();
+  </script>
+</body>
+</html>

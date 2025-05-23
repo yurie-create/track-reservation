@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>マイページ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: white;
+      padding: 2rem 3rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 2rem;
+    }
+
+    a:not(.admin-link){
+      display: block;
+      margin: 0.75rem 0;
+      font-size: 1.1rem;
+      color: #007bff;
+      background-color: transparent;
+      border: 1px solid #007bff;
+      border-radius: 6px;
+      padding: 0.6rem;
+      text-decoration: none;
+      transition: background-color 0.2s, color 0.2s;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    a:not(.admin-link):hover  {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .admin-link {
+  font-size: 0.9rem;
+  color: #666;
+  border: none;
+  background-color: transparent;
+  padding: 0.4rem;
+  text-decoration: underline;
+}
+
+.admin-link:hover {
+  color: #333;
+}
+
+    form {
+      margin-top: 1rem;
+    }
+
+    form button {
+      background-color: #f24e5e;
+      border-color: #f24e5e;
+      color: white;
+      display: block;
+      margin: 0.75rem 0;
+      font-size: 1.0rem;
+      border-radius: 6px;
+      padding: 0.6rem;
+      text-decoration: none;
+      transition: background-color 0.2s, color 0.2s;
+      cursor: pointer;
+      width: 40%;
+      display:inline;
+    }
+
+
+    form button:hover {
+      background-color: #c82333;
+    }
+
+   
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ようこそ <%= user.name %> さん</h1>
+
+    <a href="/calendar">教室予約</a>
+    <a href="/my-reservations">予約確認・キャンセル</a>
+   
+    <!-- ✅ ログアウトボタン -->
+    <form action="/logout" method="POST">
+      <button type="submit">ログアウト</button>
+    </form>
+    <a href="/admin" class="admin-link">管理者専用</a>
+
+  </div>
+</body>
+</html>

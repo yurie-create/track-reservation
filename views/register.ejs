@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ユーザー登録</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ✅ Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- ヘッド内に追加 -->
+<script src="https://yubinbango.github.io/yubinbango/yubinbango.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      padding: 2rem 0;
+      margin: 0;
+    }
+
+    .register-container {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      color: #555;
+    }
+
+    .input-group {
+      position: relative;
+    }
+
+    .input-group input,
+    .input-group select,
+    .input-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      padding-right: 2.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .input-row .input-group {
+      flex: 1;
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 0.75rem;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #888;
+      font-size: 1.1rem;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 0.9rem;
+      display: none;
+      margin-top: -0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+    }
+
+    .checkbox-group label {
+      margin: 0;
+    }
+
+    .agree {
+      display: flex;
+      align-items: center;
+      margin-top: 1rem;
+    }
+
+    .agree input {
+      margin-right: 0.5rem;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 1.5rem;
+      padding: 0.75rem;
+      background-color: #28a745;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 1rem;
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <h1>ユーザー登録</h1>
+      <form class="h-adr" id="registerForm" action="/register" method="POST">
+        <span class="p-country-name" style="display:none;">Japan</span>
+      
+      <label>姓:</label>
+      <div class="input-group">
+        <input type="text" name="lastName" required>
+      </div>
+
+      <label>名:</label>
+      <div class="input-group">
+        <input type="text" name="firstName" required>
+      </div>
+
+      <label>姓（ふりがな）:</label>
+  <div class="input-group">
+    <input type="text" name="lastNameKana" required pattern="[\u3041-\u3096ー\s　]+" placeholder="ひらがなで入力">
+  </div>
+
+  <label>名（ふりがな）:</label>
+  <div class="input-group">
+    <input type="text" name="firstNameKana" required pattern="[\u3041-\u3096ー\s　]+" placeholder="ひらがなで入力">
+  </div>
+
+      <label>生年月日:</label>
+      <div class="input-group">
+        <input type="date" name="birthday" required>
+      </div>
+
+      <label>電話番号:</label>
+      <div class="input-group">
+        <input type="tel" name="phone" pattern="0\d{1,4}-\d{1,4}-\d{3,4}" placeholder="例: 090-1234-5678" required>
+      </div>
+
+      <label>性別:</label>
+      <div class="checkbox-group">
+        <label><input type="radio" name="gender" value="男性" required> 男性</label>
+        <label><input type="radio" name="gender" value="女性"> 女性</label>
+        <label><input type="radio" name="gender" value="その他"> その他</label>
+      </div>
+
+      <label>郵便番号:</label>
+  <div class="input-group">
+    <input type="text" name="postal" class="p-postal-code" size="8" maxlength="8" placeholder="例: 100-0001" required>
+  </div>
+
+  <label>都道府県・市区町村・番地:</label>
+  <div class="input-group">
+    <input type="text" name="address1" class="p-region p-locality p-street-address p-extended-address" required>
+  </div>
+
+      <label>指導種目（複数選択可）:</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="courses" value="短距離"> 短距離</label>
+        <label><input type="checkbox" name="courses" value="中距離"> 中距離</label>
+        <label><input type="checkbox" name="courses" value="長距離"> 長距離</label>
+        <label><input type="checkbox" name="courses" value="跳躍"> 跳躍</label>
+        <label><input type="checkbox" name="courses" value="投擲"> 投擲</label>
+      </div>
+
+      <label>メールアドレス:</label>
+      <div class="input-group">
+        <input type="email" name="email" required>
+      </div>
+
+      <label>パスワード:</label>
+      <div class="input-group">
+        <input type="password" name="password" id="password" required minlength="6">
+        <span class="toggle-password" onclick="togglePassword('password', this)">
+          <i class="fa-solid fa-eye"></i>
+        </span>
+      </div>
+
+      <label>パスワード（確認用）:</label>
+      <div class="input-group">
+        <input type="password" name="confirmPassword" id="confirmPassword" required>
+        <span class="toggle-password" onclick="togglePassword('confirmPassword', this)">
+          <i class="fa-solid fa-eye"></i>
+        </span>
+      </div>
+
+      <div class="error-message" id="errorMessage">パスワードが一致しません。</div>
+
+      <div class="agree">
+        <input type="checkbox" name="terms" required>
+        <label for="terms">利用規約に同意します</label>
+      </div>
+
+      <button type="submit">登録</button>
+    </form>
+    <a href="/login">ログインページに戻る</a>
+  </div>
+
+  <script>
+    const form = document.getElementById('registerForm');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const errorMessage = document.getElementById('errorMessage');
+
+    form.addEventListener('submit', function (e) {
+      if (password.value !== confirmPassword.value) {
+        e.preventDefault();
+        errorMessage.style.display = 'block';
+      } else {
+        errorMessage.style.display = 'none';
+      }
+    });
+
+    function togglePassword(id, iconSpan) {
+      const input = document.getElementById(id);
+      const icon = iconSpan.querySelector('i');
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = "password";
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+  </script>
+</body>
+</html>

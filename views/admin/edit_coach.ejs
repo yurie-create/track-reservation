@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>コーチ情報編集</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    input, textarea { width: 100%; margin-bottom: 1em; padding: 0.5em; }
+    img { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 1em; }
+  </style>
+</head>
+<body>
+  <h2>コーチ情報編集</h2>
+  <form method="POST" action="/admin/coaches/<%= coach.id %>/edit" enctype="multipart/form-data">
+    <label>名前: <input type="text" name="name" value="<%= coach.name %>" required></label>
+    <label>プロフィール: <textarea name="profile"><%= coach.profile || '' %></textarea></label>
+    
+    <% if (coach.image) { %>
+      <div>現在の写真:</div>
+      <img src="<%= coach.image %>" alt="コーチ画像">
+    <% } %>
+
+    <label>新しい写真をアップロード:
+      <input type="file" name="photo" accept="image/*">
+    </label>
+
+    <button type="submit">更新</button>
+  </form>
+</body>
+</html>

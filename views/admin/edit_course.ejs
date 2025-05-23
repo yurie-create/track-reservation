@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>コース編集</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .form-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 1em;
+      color: #444;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 0.6em;
+      margin-top: 0.3em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 0.8em;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 1em;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>コース編集</h2>
+    <form method="POST" action="/admin/courses/<%= course.id %>/edit">
+      <label>コース名:
+        <input type="text" name="name" value="<%= course.name %>" required>
+      </label>
+
+      <label>説明:
+        <textarea name="description" rows="4"><%= course.description %></textarea>
+      </label>
+
+      <label>担当コーチ:
+        <select name="coach_id">
+          <option value="">-- 選択してください --</option>
+          <% coaches.forEach(coach => { %>
+            <option value="<%= coach.id %>" <%= coach.id === course.coach_id ? 'selected' : '' %>><%= coach.name %></option>
+          <% }) %>
+        </select>
+      </label>
+
+      <button type="submit">保存する</button>
+    </form>
+  </div>
+</body>
+</html>

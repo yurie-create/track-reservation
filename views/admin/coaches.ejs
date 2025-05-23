@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>コーチ一覧</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f4f7fb;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+    }
+
+    a.button {
+      display: inline-block;
+      margin-bottom: 1rem;
+      padding: 0.5em 1em;
+      background-color: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 0 8px rgba(0,0,0,0.05);
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 0.8em;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f0f0f0;
+    }
+
+    img {
+      width: 80px;
+      height: auto;
+      border-radius: 6px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+
+    .delete-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.4em 0.8em;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+.delete-btn:hover {
+  background-color: #c0392b;
+}
+
+.edit-btn {
+  background-color: #3498db;
+  color: white;
+  padding: 0.4em 0.8em;
+  border-radius: 4px;
+  text-decoration: none;
+  margin-right: 0.5em;
+  display: inline-block;
+  font-size: 0.9em;
+}
+.edit-btn:hover {
+  background-color: #2980b9;
+}
+
+  </style>
+</head>
+<body>
+  <h2>コーチ一覧</h2>
+  <a href="/admin/coaches/new" class="button">＋ 新規コーチ登録</a>
+
+  <table>
+    <thead>
+      <tr>
+        <th>名前</th>
+        <th>プロフィール</th>
+        <th>写真</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% coaches.forEach(coach => { %>
+        <tr>
+          <td><%= coach.name %></td>
+          <td><%= coach.profile || '（未登録）' %></td>
+          <td>
+            <% if (coach.image) { %>
+              <img src="<%= coach.image %>" alt="コーチ写真">
+            <% } else { %>
+              なし
+            <% } %>
+          </td>
+          <td>
+            <a href="/admin/coaches/<%= coach.id %>/edit" class="edit-btn">編集</a> |
+            <form action="/admin/coaches/<%= coach.id %>/delete" method="POST" style="display:inline;" onsubmit="return confirm('本当に削除しますか？');">
+              <button type="submit" class="delete-btn">削除</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

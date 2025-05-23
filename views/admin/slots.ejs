@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>スロット一覧</title>
+</head>
+<body>
+  <h1>登録済みのスロット一覧</h1>
+  <a href="/admin/slots/new">新規スロット登録</a>
+  <h2>スロット一覧</h2>
+<table border="1">
+  <thead>
+    <tr>
+      <th>日付</th>
+      <th>時間</th>
+      <th>コーチ</th>
+      <th>コース</th>
+      <th>場所</th>
+      <th>定員</th>
+      <th>備考</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% slots.forEach(slot => { %>
+      <tr>
+        <td><%= slot.date %></td>
+        <td><%= slot.timeslot %></td>
+        <td><%= slot.coach_name %></td>
+        <td><%= slot.course_name %></td>
+        <td><%= slot.location %></td>
+        <td><%= slot.max_capacity || '' %></td>
+        <td><%= slot.note || '' %></td>
+        <td>
+          <a href="/admin/slots/<%= slot.id %>/edit">編集</a>
+          <form action="/admin/slots/<%= slot.id %>/delete" method="POST" style="display:inline;">
+            <button type="submit" onclick="return confirm('削除してよろしいですか？')">削除</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+</body>
+</html>

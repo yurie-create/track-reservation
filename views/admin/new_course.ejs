@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>新規コース登録</title>
+</head>
+<body>
+<h2>新規コース登録</h2>
+<form method="POST" action="/admin/courses">
+  <label>コース名: <input type="text" name="name" required></label><br>
+  <label>説明: <textarea name="description"></textarea></label><br>
+  <label>担当コーチ:
+    <select name="coach_id">
+      <option value="">選択してください</option>
+      <% coaches.forEach(coach => { %>
+        <option value="<%= coach.id %>"><%= coach.name %></option>
+      <% }) %>
+    </select>
+  </label><br>
+  <button type="submit">登録</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>スロット編集</title>
+</head>
+<body>
+  <h1>スロット編集</h1>
+
+  <form action="/admin/slots/<%= slot.id %>/edit" method="POST">
+    <label>コーチ:</label>
+    <select name="coach_id" required>
+      <% coaches.forEach(coach => { %>
+        <option value="<%= coach.id %>" <%= coach.id === slot.coach_id ? 'selected' : '' %>><%= coach.name %></option>
+      <% }) %>
+    </select><br>
+
+    <label>コース:</label>
+    <select name="course_id" required>
+      <% courses.forEach(course => { %>
+        <option value="<%= course.id %>" <%= course.id === slot.course_id ? 'selected' : '' %>><%= course.name %></option>
+      <% }) %>
+    </select><br>
+
+    <label>場所:</label>
+    <select name="location_id" required>
+      <% locations.forEach(loc => { %>
+        <option value="<%= loc.id %>" <%= loc.id === slot.location_id ? 'selected' : '' %>><%= loc.name %></option>
+      <% }) %>
+    </select><br>
+
+    <label>日付:</label>
+    <input type="date" name="date" value="<%= slot.date %>" required><br>
+
+    <label>時間帯:</label>
+<select name="timeslot" required>
+  <% const allTimeslots = ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00"]; %>
+  <% allTimeslots.forEach(time => { %>
+    <option value="<%= time %>" <%= time === slot.timeslot ? 'selected' : '' %>><%= time %></option>
+  <% }) %>
+</select><br>
+
+    <label>定員:</label>
+    <input type="number" name="max_capacity" value="<%= slot.max_capacity || '' %>"><br>
+
+    <label>備考:</label>
+    <textarea name="note"><%= slot.note || '' %></textarea><br>
+
+    <button type="submit">更新</button>
+    <a href="/admin/slots">戻る</a>
+  </form>
+</body>
+</html>

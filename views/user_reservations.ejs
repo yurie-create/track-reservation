@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title><%= user.name %>さんの予約履歴</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container-box {
+      background-color: white;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    p {
+      text-align: center;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #3498db;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+
+    .no-reservations {
+      text-align: center;
+      color: #888;
+      padding: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-box">
+    <h1><%= user.lastName %> <%= user.firstName %> さんの予約履歴</h1>
+    <p>メール: <%= user.email %></p>
+
+    <a href="/admin/users" class="back-link">← ユーザー一覧に戻る</a>
+
+    <table>
+      <thead>
+        <tr>
+          <th>日付</th>
+      <th>時間</th>
+      <th>コース</th>
+      <th>コーチ</th>
+      <th>場所</th>
+      <th>備考</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (reservations.length === 0) { %>
+          <tr><td colspan="4" class="no-reservations">予約はありません</td></tr>
+        <% } else { %>
+          <% reservations.forEach(r => { %>
+            <tr>
+              <td><%= r.date %></td>
+        <td><%= r.timeslot %></td>
+        <td><%= r.course_name %></td>
+        <td><%= r.coach_name %></td>
+        <td><%= r.location_name %></td>
+        <td><%= r.notes %></td>
+      
+            </tr>
+          <% }); %>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

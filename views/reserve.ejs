@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>レッスン予約</title>
+  <style>
+ body {
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: #f4f7fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-top: 2rem;
+      font-size: 2rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* タイトルの背景カラーとラベル */
+    label {
+      display: block;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+
+    .label-container select {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      margin-top: 0.5em;
+      margin-bottom: 1.0em;
+      background-color: white;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    /* 見た目だけチェックボックス風 */
+    select {
+      display: inline-block;
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    select:focus {
+      outline: none;
+    }
+
+    select option {
+      padding-left: 1rem;
+    }
+
+    .button-group {
+      display: flex;
+  justify-content: space-between;
+      margin-top: 1em;
+    }
+
+    .button-group button {
+      padding: 0.8em 1.6em;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  background-color: #66cc99;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+    }
+
+    button {
+      background-color: #66cc99;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: #45a049;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 20%;
+      left: 20%;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 60%;
+    }
+
+    /* テーブル */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2em;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+      min-width: 90px;
+    }
+
+    th {
+      background-color: #f7f7f7;
+      font-weight: normal;
+    }
+
+    .selected {
+  background-color: #cdeefa; /* 明るい水色 */
+  box-shadow: inset 0 0 0 2px #2196f3; /* 青い枠で強調 */
+  font-weight: bold;
+  color: #000;
+}
+
+
+    .status-available:hover {
+      background-color: #f1f1f1;
+    }
+    .status-available {
+      color: green;
+      font-weight: bold;
+      font-size: 1.4em;        /* ← 大きくする */
+      cursor: pointer;
+      text-align: center;
+      vertical-align: middle;  /* ← セル中央揃え */
+      line-height: 1.4;        /* ← 行の高さを調整 */
+    }
+    .status-waitlist {
+      color: orange;
+      font-weight: bold;
+      cursor: default;
+    }
+    .status-unavailable {
+      color: #ccc;
+    }
+
+    .circle-dot {
+  width: 16px;
+  height: 16px;
+  margin: 0 auto;
+  background-color: green;
+  border-radius: 50%;
+}
+
+
+.section-title {
+  border-left: 8px solid #66cc99;
+  background-color: #f2f2f2;
+  padding: 0.6em 1em;
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+
+.select-box {
+  display: flex;
+  align-items: flex-start;
+  background-color: #fffaf2;
+  border: 1px solid #f0e0c0;
+  padding: 1em;
+  border-radius: 8px;
+  margin-bottom: 1em;
+  gap: 1em;
+}
+
+.select-box input[type="radio"] {
+  margin-top: 0.3em;
+}
+
+.course-main {
+  flex: 1;
+}
+
+.course-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.toggle-desc {
+  background-color: #65c9a9;
+  color: white;
+  border: none;
+  padding: 0.3em 0.8em;
+  font-size: 0.85em;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.course-desc {
+  display: none;
+  font-size: 0.85em;
+  color: #666;
+  margin-top: 0.5em;
+}
+
+
+
+.staff-card {
+  border: 2px solid #f8e6c2;
+  background-color: #fffaf2;
+  border-radius: 10px;
+  padding: 1em;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  margin: 0.5em;
+  transition: border-color 0.3s;
+}
+.staff-card input[type="radio"] {
+  margin-bottom: 0.5em;
+}
+.staff-card img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 0.5em;
+}
+.staff-card:hover {
+  border-color: #ffcc80;
+}
+
+textarea {
+      width: 100%;
+      height: 80px;
+      margin-top: 1em;
+      padding: 0.6em;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    #reservation-form {
+  text-align: center; /* ボタンを中央に */
+  margin-top: 2em;
+}
+
+#reservation-form button[type="submit"] {
+  padding: 0.8em 2em;
+  font-size: 1.0rem;
+  background-color: #65c9a9;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+#reservation-form button[type="submit"]:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+#reservation-form button[type="submit"]:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.legend {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  font-size: 1.0em;
+  color: #444;
+}
+
+.legend-item {
+  margin-right: 1.5em;
+  display: inline-block;
+}
+
+.dot {
+  display: inline-block;
+  width: 1em;
+  text-align: center;
+  font-weight: bold;
+  margin-right: 0.3em;
+}
+
+.available {
+  color: green;
+}
+
+.waitlist {
+  color: orange;
+}
+
+.unavailable {
+  color: #ccc;
+}
+
+
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>レッスン予約</h1>
+
+    <!-- コーチ選択 -->
+    <div class="section-title">コーチ選択</div>
+    <div id="coach-container"></div>
+
+    <!-- コース選択 -->
+    <div class="section-title">コース選択</div>
+    <div id="course-container"></div>
+
+    <!-- 場所選択 -->
+    <div class="section-title">場所選択</div>
+    <div id="location-container"></div>
+
+    <!-- 日付・時間テーブル切り替え -->
+    <div class="section-title">日時選択</div>
+    <div class="legend">
+      <span class="legend-item"><span class="dot available"><div class="circle-dot"></div></span> ・・・予約可</span>
+      <span class="legend-item"><span class="dot waitlist">▲</span> ・・・TEL</span>
+      <span class="legend-item"><span class="dot unavailable">✖︎</span> ・・・予約不可</span>
+    </div>
+    <div class="button-group">
+      <button type="button" id="prev-week">◀ 前週</button>
+      <button type="button" id="next-week">次週 ▶</button>
+    </div>
+
+    <div id="timeslot-table-container" style="margin-top: 2em; overflow-x: auto;"></div>
+
+    <!-- 備考と予約 -->
+    <form id="reservation-form" method="POST" action="/reserve">
+      <label>コメント:</label>
+      <textarea name="note" placeholder="コーチに伝えたいことやご要望があればご記入ください。"></textarea>
+      <input type="hidden" id="selected-slot-id" name="slot_id">
+      <button type="submit" disabled>予約する</button>
+    </form>
+  </div>
+
+
+  <div id="confirm-modal" class="modal">
+    <h3>予約内容の確認</h3>
+    <p id="confirm-details"></p>
+    <button id="confirm-submit">確定</button>
+    <button onclick="document.getElementById('confirm-modal').style.display='none'">キャンセル</button>
+  </div>
+
+  <script>
+    window.CURRENT_USER_ID = <%= user.id %>;
+  </script>
+
+  <script src="js/reserve_table.js"></script>
+</body>
+</html>

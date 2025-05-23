@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>自分の予約一覧</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: "Helvetica Neue", sans-serif;
+      background-color: #f9fafb;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 1.5rem;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 800px;
+      background: white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+      overflow: hidden;
+      table-layout: fixed;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+      font-weight: 600;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    form {
+      margin: 0;
+    }
+
+    button {
+      background-color: gray;
+      border: none;
+      color: white;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: rgb(38, 128, 246);
+    }
+
+    a {
+      margin-top: 1.5rem;
+      text-decoration: none;
+      color: #007bff;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    a:hover {
+      color: #0056b3;
+    }
+
+    @media (max-width: 600px) {
+      table, th, td {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>予約一覧</h1>
+  <table>
+    <tr>
+      <th>日付</th>
+      <th>時間</th>
+      <th>コース</th>
+      <th>コーチ</th>
+      <th>場所</th>
+      <th>備考</th>
+      <th>操作</th>
+    </tr>
+    <% reservations.forEach(r => { %>
+      <tr>
+        <td><%= r.date %></td>
+        <td><%= r.timeslot %></td>
+        <td><%= r.course_name %></td>
+        <td><%= r.coach_name %></td>
+        <td><%= r.location_name %></td>
+        <td><%= r.notes %></td>
+        <td>
+          <form action="/cancel/<%= r.reservation_id %>" method="POST" onsubmit="return confirm('本当にキャンセルしますか？');">
+            <button type="submit">キャンセル</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </table>
+  <a href="/">TOPに戻る</a>
+</body>
+</html>

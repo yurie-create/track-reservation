@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>カレンダー</title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+ #calendar {
+      max-width: 900px;
+      margin: 40px auto 60px; /* 下に少しゆとり追加 */
+      background-color: white;
+     padding: 20px;
+     border-radius: 10px;
+     box-shadow: 0 0 10px rgba(0,0,0,0.05);
+     padding-bottom: 40px;
+    }
+
+    body {
+  font-family: 'Helvetica Neue', sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+
+h1, h2 {
+  text-align: center;
+  color: #2c3e50;
+}
+
+
+
+    .fc-event {
+      font-size: 0.75rem;     /* 文字を少し小さめにして */
+      white-space: normal;    /* 折り返しを許可 */
+      line-height: 1.2;       /* 行間を調整 */
+      padding: 2px;           /* 少し余白を調整 */
+    }
+  
+    .fc-daygrid-event {
+      min-height: 2.5em;      /* イベント枠の高さを広げる */
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- FullCalendar CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
+  <!-- FullCalendar JS -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/light.css" />
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/tippy.js@6"></script>
+
+</head>
+<body>
+  <h1>予約カレンダー</h1>
+  <h2>ご希望の日時をクリックしてください</h2>
+  <!-- カレンダー -->
+  <div id="calendar-container">
+  <div id="calendar"></div>
+  </div>
+  <a href="/">TOPに戻る</a>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const calendarEl = document.getElementById('calendar');
+    
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'ja',
+        events: function(fetchInfo, successCallback, failureCallback) {
+  const start = fetchInfo.startStr; // フルカレンダーで表示される月初日
+  const end = fetchInfo.endStr;     // フルカレンダーで表示される月末日
+  console.log('📤 FullCalendarが要求した範囲:', start, end);  // ←追加
+
+  $.get(`/api/reservations/range?start=${start}&end=${end}`, function(data) {
+    console.log('APIから取得したデータ:', data); // サーバーから返されたデータ
+
+    if (data && data.length > 0) {
+      const events = data.map(item => ({
+        title: item.title,
+        start: item.start,
+        allDay: true,
+        extendedProps: item.extendedProps
+  
+      }))
+      .filter(event => !event.extendedProps?.disabled);
+      console.log('FullCalendarに渡すイベントデータ:', events); // 渡すイベントデータを確認
+      successCallback(events); // eventsデータをFullCalendarに渡す
+    } else {
+      console.log('イベントデータが空です。');
+      failureCallback('イベントデータが空です。');
+    }
+  }).fail(function() {
+    console.error('APIリクエスト失敗');
+    failureCallback('データ取得失敗');
+  });
+},
+
+
+eventDidMount: function(info) {
+  const title = info.event.title;
+
+
+  if (title.includes('残り５枠')) {
+    $(info.el).css('background-color', '#0095d9'); 
+  } else if(title.includes('空きなし')) {
+    $(info.el).css('background-color', '#adadad'); // グレー
+  } else
+    {
+    const match = title.match(/残り\s(\d+)\s枠/);
+    const remaining = match ? parseInt(match[1]) : null;
+
+     if (remaining < 3) {
+      $(info.el).css('background-color', '#e60033'); // 赤
+      $(info.el).find('.fc-event-title').css('color', 'black');
+    } else {
+      $(info.el).css('background-color', '#0095d9'); // 緑
+    }
+  }
+  const { course, timeslot, remaining } = info.event.extendedProps;
+  if (course && timeslot) {
+    tippy(info.el, {
+      content: `
+        <strong>コース:</strong> ${course}<br>
+        <strong>時間:</strong> ${timeslot}<br>
+        <strong>残枠:</strong> ${remaining} 枠
+      `,
+      allowHTML: true,
+      theme: 'light',
+      placement: 'top',
+    });
+  }
+},
+
+dateClick: function(info) {
+  const clickedDate = info.dateStr; // 例: '2025-05-18'
+  window.location.href = `/reserve?date=${clickedDate}`;
+},
+eventClick: function(info) {
+  const dateStr = info.event.startStr;
+  window.location.href = `/reserve?date=${dateStr}`;
+}
+
+}
+      );
+     
+calendar.render();
+    });
+  </script>
+</body>
+</html>

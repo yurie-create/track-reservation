@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>新規コーチ登録</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .form-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 1em;
+      color: #444;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    textarea,
+    input[type="file"] {
+      width: 100%;
+      padding: 0.6em;
+      margin-top: 0.3em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.8em;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>新規コーチ登録</h2>
+    <form method="POST" action="/admin/coaches" enctype="multipart/form-data">
+      <label>名前:
+        <input type="text" name="name" required>
+      </label>
+
+      <label>プロフィール:
+        <textarea name="profile" rows="4"></textarea>
+      </label>
+
+      <label>写真:
+        <input type="file" name="photo" accept="image/*">
+      </label>
+
+      <button type="submit">登録</button>
+    </form>
+  </div>
+</body>
+</html>

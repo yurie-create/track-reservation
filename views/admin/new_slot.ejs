@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>新規スロット登録</title>
+</head>
+<body>
+  <h1>新しいスロットの登録</h1>
+  <form action="/admin/slots" method="POST">
+    <label for="coach_id">コーチ:</label>
+    <select name="coach_id" id="coach_id">
+      <% coaches.forEach(coach => { %>
+        <option value="<%= coach.id %>"><%= coach.name %></option>
+      <% }) %>
+    </select><br>
+
+    <label for="course_id">コース:</label>
+    <select name="course_id" id="course_id">
+      <% courses.forEach(course => { %>
+        <option value="<%= course.id %>"><%= course.name %></option>
+      <% }) %>
+    </select><br>
+
+    <label for="location">場所:</label>
+    <select name="location_id" id="location">
+      <% locations.forEach(location => { %>
+        <option value="<%= location.id %>"><%= location.name %></option>
+      <% }) %>
+    </select><br>
+
+    <label for="date">日付:</label>
+    <input type="date" name="date" id="date" required><br>
+
+    <label for="timeslot">時間帯:</label>
+      <select name="timeslot" required>
+        <option value="">選択してください</option>
+        <option value="09:00">09:00</option>
+        <option value="10:00">10:00</option>
+        <option value="11:00">11:00</option>
+        <option value="13:00">13:00</option>
+        <option value="14:00">14:00</option>
+        <option value="15:00">15:00</option>
+        <option value="16:00">16:00</option>
+      </select><br>
+    
+    
+    <label for="max_capacity">定員:</label>
+    <input type="number" name="max_capacity" id="max_capacity" min="1" required><br>
+
+    
+
+    <label for="note">備考:</label>
+    <textarea name="note" id="note"></textarea><br>
+
+    <button type="submit">登録</button>
+  </form>
+</body>
+</html>
