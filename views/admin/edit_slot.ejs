@@ -1,52 +1,138 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
+  <meta charset="UTF-8">
   <title>スロット編集</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7fb;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 2rem;
+    }
+
+    .form-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.6em;
+      margin-top: 0.3em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+
+    textarea {
+      height: 80px;
+    }
+
+    .button-group {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    button, .back-link {
+      padding: 0.7em 1.5em;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .back-link {
+      background-color: #ccc;
+      color: #333;
+    }
+
+    .back-link:hover {
+      background-color: #bbb;
+    }
+  </style>
 </head>
 <body>
-  <h1>スロット編集</h1>
+  <div class="form-container">
+    <h1>スロット編集</h1>
 
-  <form action="/admin/slots/<%= slot.id %>/edit" method="POST">
-    <label>コーチ:</label>
-    <select name="coach_id" required>
-      <% coaches.forEach(coach => { %>
-        <option value="<%= coach.id %>" <%= coach.id === slot.coach_id ? 'selected' : '' %>><%= coach.name %></option>
-      <% }) %>
-    </select><br>
+    <form action="/admin/slots/<%= slot.id %>/edit" method="POST">
+      <label>コーチ:</label>
+      <select name="coach_id" required>
+        <% coaches.forEach(coach => { %>
+          <option value="<%= coach.id %>" <%= coach.id === slot.coach_id ? 'selected' : '' %>><%= coach.name %></option>
+        <% }) %>
+      </select>
 
-    <label>コース:</label>
-    <select name="course_id" required>
-      <% courses.forEach(course => { %>
-        <option value="<%= course.id %>" <%= course.id === slot.course_id ? 'selected' : '' %>><%= course.name %></option>
-      <% }) %>
-    </select><br>
+      <label>コース:</label>
+      <select name="course_id" required>
+        <% courses.forEach(course => { %>
+          <option value="<%= course.id %>" <%= course.id === slot.course_id ? 'selected' : '' %>><%= course.name %></option>
+        <% }) %>
+      </select>
 
-    <label>場所:</label>
-    <select name="location_id" required>
-      <% locations.forEach(loc => { %>
-        <option value="<%= loc.id %>" <%= loc.id === slot.location_id ? 'selected' : '' %>><%= loc.name %></option>
-      <% }) %>
-    </select><br>
+      <label>場所:</label>
+      <select name="location_id" required>
+        <% locations.forEach(loc => { %>
+          <option value="<%= loc.id %>" <%= loc.id === slot.location_id ? 'selected' : '' %>><%= loc.name %></option>
+        <% }) %>
+      </select>
 
-    <label>日付:</label>
-    <input type="date" name="date" value="<%= slot.date %>" required><br>
+      <label>日付:</label>
+      <input type="date" name="date" value="<%= slot.date %>" required>
 
-    <label>時間帯:</label>
-<select name="timeslot" required>
-  <% const allTimeslots = ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00"]; %>
-  <% allTimeslots.forEach(time => { %>
-    <option value="<%= time %>" <%= time === slot.timeslot ? 'selected' : '' %>><%= time %></option>
-  <% }) %>
-</select><br>
+      <label>時間帯:</label>
+      <select name="timeslot" required>
+        <% const allTimeslots = ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00"]; %>
+        <% allTimeslots.forEach(time => { %>
+          <option value="<%= time %>" <%= time === slot.timeslot ? 'selected' : '' %>><%= time %></option>
+        <% }) %>
+      </select>
 
-    <label>定員:</label>
-    <input type="number" name="max_capacity" value="<%= slot.max_capacity || '' %>"><br>
+      <label>定員:</label>
+      <input type="number" name="max_capacity" value="<%= slot.max_capacity || '' %>">
 
-    <label>備考:</label>
-    <textarea name="note"><%= slot.note || '' %></textarea><br>
+      <label>備考:</label>
+      <textarea name="note"><%= slot.note || '' %></textarea>
 
-    <button type="submit">更新</button>
-    <a href="/admin/slots">戻る</a>
-  </form>
+      <div class="button-group">
+        <button type="submit">更新</button>
+        <a href="/admin/slots" class="back-link">戻る</a>
+      </div>
+    </form>
+  </div>
 </body>
 </html>
+

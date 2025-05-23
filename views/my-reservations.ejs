@@ -78,11 +78,34 @@
       color: #0056b3;
     }
 
-    @media (max-width: 600px) {
-      table, th, td {
-        font-size: 0.9rem;
-      }
-    }
+    .reservation-cards {
+  display: none;
+  width: 100%;
+  max-width: 800px;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.card p {
+  margin: 0.4rem 0;
+}
+
+@media (max-width: 600px) {
+  table {
+    display: none;
+  }
+  .reservation-cards {
+    display: block;
+  }
+}
+
+    
   </style>
 </head>
 <body>
@@ -113,6 +136,23 @@
       </tr>
     <% }) %>
   </table>
+  <!-- ↓ これを table の直後に追加してください -->
+<div class="reservation-cards">
+  <% reservations.forEach(r => { %>
+    <div class="card">
+      <p><strong>日付:</strong> <%= r.date %></p>
+      <p><strong>時間:</strong> <%= r.timeslot %></p>
+      <p><strong>コース:</strong> <%= r.course_name %></p>
+      <p><strong>コーチ:</strong> <%= r.coach_name %></p>
+      <p><strong>場所:</strong> <%= r.location_name %></p>
+      <p><strong>備考:</strong> <%= r.notes %></p>
+      <form action="/cancel/<%= r.reservation_id %>" method="POST" onsubmit="return confirm('本当にキャンセルしますか？');">
+        <button type="submit">キャンセル</button>
+      </form>
+    </div>
+  <% }) %>
+</div>
+
   <a href="/">TOPに戻る</a>
 </body>
 </html>

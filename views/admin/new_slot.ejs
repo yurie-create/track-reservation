@@ -1,38 +1,105 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <title>新規スロット登録</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7fb;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 2rem;
+    }
+
+    .form-container {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #444;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.6em;
+      margin-top: 0.3em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+
+    textarea {
+      height: 80px;
+    }
+
+    button {
+      margin-top: 2rem;
+      width: 100%;
+      padding: 0.8em;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
 </head>
 <body>
-  <h1>新しいスロットの登録</h1>
-  <form action="/admin/slots" method="POST">
-    <label for="coach_id">コーチ:</label>
-    <select name="coach_id" id="coach_id">
-      <% coaches.forEach(coach => { %>
-        <option value="<%= coach.id %>"><%= coach.name %></option>
-      <% }) %>
-    </select><br>
+  <div class="form-container">
+    <h1>新しいスロットの登録</h1>
+    <form action="/admin/slots" method="POST">
+      <label for="coach_id">コーチ:</label>
+      <select name="coach_id" id="coach_id" required>
+        <% coaches.forEach(coach => { %>
+          <option value="<%= coach.id %>"><%= coach.name %></option>
+        <% }) %>
+      </select>
 
-    <label for="course_id">コース:</label>
-    <select name="course_id" id="course_id">
-      <% courses.forEach(course => { %>
-        <option value="<%= course.id %>"><%= course.name %></option>
-      <% }) %>
-    </select><br>
+      <label for="course_id">コース:</label>
+      <select name="course_id" id="course_id" required>
+        <% courses.forEach(course => { %>
+          <option value="<%= course.id %>"><%= course.name %></option>
+        <% }) %>
+      </select>
 
-    <label for="location">場所:</label>
-    <select name="location_id" id="location">
-      <% locations.forEach(location => { %>
-        <option value="<%= location.id %>"><%= location.name %></option>
-      <% }) %>
-    </select><br>
+      <label for="location_id">場所:</label>
+      <select name="location_id" id="location_id" required>
+        <% locations.forEach(location => { %>
+          <option value="<%= location.id %>"><%= location.name %></option>
+        <% }) %>
+      </select>
 
-    <label for="date">日付:</label>
-    <input type="date" name="date" id="date" required><br>
+      <label for="date">日付:</label>
+      <input type="date" name="date" id="date" required>
 
-    <label for="timeslot">時間帯:</label>
-      <select name="timeslot" required>
+      <label for="timeslot">時間帯:</label>
+      <select name="timeslot" id="timeslot" required>
         <option value="">選択してください</option>
         <option value="09:00">09:00</option>
         <option value="10:00">10:00</option>
@@ -41,18 +108,16 @@
         <option value="14:00">14:00</option>
         <option value="15:00">15:00</option>
         <option value="16:00">16:00</option>
-      </select><br>
-    
-    
-    <label for="max_capacity">定員:</label>
-    <input type="number" name="max_capacity" id="max_capacity" min="1" required><br>
+      </select>
 
-    
+      <label for="max_capacity">定員:</label>
+      <input type="number" name="max_capacity" id="max_capacity" min="1" required>
 
-    <label for="note">備考:</label>
-    <textarea name="note" id="note"></textarea><br>
+      <label for="note">備考:</label>
+      <textarea name="note" id="note"></textarea>
 
-    <button type="submit">登録</button>
-  </form>
+      <button type="submit">登録</button>
+    </form>
+  </div>
 </body>
 </html>

@@ -1,46 +1,122 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <title>スロット一覧</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7fb;
+      padding: 2rem;
+    }
+
+    h1, h2 {
+      color: #333;
+    }
+
+    a.button {
+      display: inline-block;
+      margin-bottom: 1rem;
+      padding: 0.5em 1em;
+      background-color: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 0.6em;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f0f0f0;
+    }
+
+    tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.5em;
+      justify-content: center;
+    }
+
+    .edit-btn, .delete-btn {
+      padding: 0.4em 0.8em;
+      font-size: 0.85em;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      color: white;
+    }
+
+    .edit-btn {
+      background-color: #3498db;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .edit-btn:hover {
+      background-color: #2980b9;
+    }
+
+    .delete-btn {
+      background-color: #e74c3c;
+    }
+
+    .delete-btn:hover {
+      background-color: #c0392b;
+    }
+  </style>
 </head>
 <body>
   <h1>登録済みのスロット一覧</h1>
-  <a href="/admin/slots/new">新規スロット登録</a>
-  <h2>スロット一覧</h2>
-<table border="1">
-  <thead>
-    <tr>
-      <th>日付</th>
-      <th>時間</th>
-      <th>コーチ</th>
-      <th>コース</th>
-      <th>場所</th>
-      <th>定員</th>
-      <th>備考</th>
-      <th>操作</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% slots.forEach(slot => { %>
-      <tr>
-        <td><%= slot.date %></td>
-        <td><%= slot.timeslot %></td>
-        <td><%= slot.coach_name %></td>
-        <td><%= slot.course_name %></td>
-        <td><%= slot.location %></td>
-        <td><%= slot.max_capacity || '' %></td>
-        <td><%= slot.note || '' %></td>
-        <td>
-          <a href="/admin/slots/<%= slot.id %>/edit">編集</a>
-          <form action="/admin/slots/<%= slot.id %>/delete" method="POST" style="display:inline;">
-            <button type="submit" onclick="return confirm('削除してよろしいですか？')">削除</button>
-          </form>
-        </td>
-      </tr>
-    <% }) %>
-  </tbody>
-</table>
+  <a href="/admin/slots/new" class="button">＋ 新規スロット登録</a>
 
+  <table>
+    <thead>
+      <tr>
+        <th>日付</th>
+        <th>時間</th>
+        <th>コーチ</th>
+        <th>コース</th>
+        <th>場所</th>
+        <th>定員</th>
+        <th>備考</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% slots.forEach(slot => { %>
+        <tr>
+          <td><%= slot.date %></td>
+          <td><%= slot.timeslot %></td>
+          <td><%= slot.coach_name %></td>
+          <td><%= slot.course_name %></td>
+          <td><%= slot.location %></td>
+          <td><%= slot.max_capacity || '' %></td>
+          <td><%= slot.note || '' %></td>
+          <td>
+            <div class="action-buttons">
+              <a href="/admin/slots/<%= slot.id %>/edit" class="edit-btn">編集</a>
+              <form action="/admin/slots/<%= slot.id %>/delete" method="POST" onsubmit="return confirm('削除してよろしいですか？');">
+                <button type="submit" class="delete-btn">削除</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
 </body>
 </html>
