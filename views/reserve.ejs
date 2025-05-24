@@ -100,16 +100,21 @@
     .modal {
   display: none;
   position: fixed;
-  top: 20%;
-  left: 20%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: 60%;
+  padding: 2em;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  width: 80%;
+  max-width: 500px;
   z-index: 1000;
-  max-width: 500px; /* ← 最大幅を指定 */
+  text-align: center;
+  min-height: 200px;
 }
+
+
 
 .modal button {
   font-size: 1rem;
@@ -336,24 +341,40 @@ textarea {
   color: #ccc;
 }
 
-@media (max-width: 600px) {
+#modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* 半透明の黒 */
+  z-index: 999;
+  display: none;
+}
+
+
+@media screen and (max-width: 600px) {
+  .modal {
+    width: 95vw !important;
+    max-width: none !important;
+    padding: 2em 1em !important;
+    font-size: 1.2rem !important;
+  }
+
+  .modal h3 {
+    font-size: 1.5rem !important;
+  }
 
   .modal button {
-    font-size: 1.1rem;
-    padding: 1em 2em;
-    width: 100%; /* 横幅いっぱいにして押しやすく */
-    box-sizing: border-box;
+    font-size: 1.1rem !important;
+    padding: 1em !important;
+    width: 100% !important;
+    margin: 0.5em 0 !important;
   }
-
-  .modal {
-    top: 10%;
-    left: 5%;
-    width: 90%;
-    padding: 1em;
-  }
-
-
 }
+
+
+
 
 
   </style>
@@ -398,18 +419,18 @@ textarea {
     </form>
   </div>
 
-
+<div id="modal-overlay"></div>
   <div id="confirm-modal" class="modal">
     <h3>予約内容の確認</h3>
     <p id="confirm-details"></p>
     <button id="confirm-submit">確定</button>
-    <button onclick="document.getElementById('confirm-modal').style.display='none'">キャンセル</button>
+    <button onclick="closeModal()">キャンセル</button>
   </div>
 
   <script>
     window.CURRENT_USER_ID = <%= user.id %>;
   </script>
-
+  
   <script src="js/reserve_table.js"></script>
 </body>
 </html>

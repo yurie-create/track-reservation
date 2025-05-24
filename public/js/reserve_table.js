@@ -186,6 +186,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   
+  function closeModal() {
+    document.getElementById("confirm-modal").style.display = "none";
+    document.getElementById("modal-overlay").style.display = "none";
+  }
 
 document.getElementById("reservation-form").addEventListener("submit", e => {
   e.preventDefault();
@@ -209,8 +213,11 @@ const locationName = document.querySelector('input[name="location"]:checked')?.p
     場所：${locationName}<br>
     日時：${date} ${selectedTime}
   `;
+ 
   document.getElementById("confirm-details").innerHTML = message;
   document.getElementById("confirm-modal").style.display = "block";
+  document.getElementById("modal-overlay").style.display = "block"; // ← 追加！
+  
 });
 
 document.getElementById("confirm-submit").addEventListener("click", () => {
@@ -232,7 +239,6 @@ document.getElementById("confirm-submit").addEventListener("click", () => {
         alert("予約に失敗しました");
       }
     });
-
-  document.getElementById("confirm-modal").style.display = "none";
+    closeModal();
 });
 });
