@@ -689,7 +689,6 @@ app.post('/reserve', (req, res) => {
   if (!user) return res.status(403).send('ログインしてください');
   if (!slot_id) return res.status(400).send('スロットが未選択です');
 
-  // 予約重複チェック
   const checkDuplicateSql = `
     SELECT 1 FROM reservations_v2 WHERE user_id = ? AND slot_id = ?
   `;
@@ -697,12 +696,22 @@ app.post('/reserve', (req, res) => {
     if (err) return res.status(500).send('DBエラー（重複チェック）');
     if (existing) return res.send('このスロットはすでに予約済みです');
 
-    // 定員チェックと登録処理
     const checkSql = `
-      SELECT max_capacity,
-             (SELECT COUNT(*) FROM reservations_v2 WHERE slot_id = ? AND status = 'reserved') AS reserved_count
-      FROM lesson_slots
-      WHERE id = ?
+      SELECT 
+        s.date, s.timeslot, s.max_capacity,
+        c.name AS course_name,
+        h.name AS coach_name,
+        l.name AS location_name,
+        (
+          SELECT COUNT(*) 
+          FROM reservations_v2 
+          WHERE slot_id = s.id AND status = 'reserved'
+        ) AS reserved_count
+      FROM lesson_slots s
+      JOIN courses c ON s.course_id = c.id
+      JOIN coaches h ON s.coach_id = h.id
+      JOIN locations l ON s.location_id = l.id
+      WHERE s.id = ?
     `;
 
     db.get(checkSql, [slot_id, slot_id], (err, row) => {
@@ -712,10 +721,9 @@ app.post('/reserve', (req, res) => {
       const status = row.reserved_count >= row.max_capacity ? 'waitlist' : 'reserved';
 
       const insertSql = `
-        INSERT INTO reservations_v2 (user_id, slot_id, status, notes, created_at, updated_at)
-        VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-      `;
-
+  INSERT INTO reservations_v2 (user_id, slot_id, status, notes, created_at, updated_at)
+  VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+`;
       db.run(insertSql, [user.id, slot_id, status, note], (err) => {
         if (err) {
           console.error(err);
@@ -730,6 +738,10 @@ app.post('/reserve', (req, res) => {
       });
     });
   });
+});
+
+app.get('/thanks', (req, res) => {
+  res.render('thanks'); // ← reservation を渡していない
 });
 
 
@@ -939,9 +951,6 @@ app.get("/api/available_dates", (req, res) => {
 
 
 
-app.get('/thanks', (req, res) => {
-  res.render('thanks'); // views/thanks.ejs が必要
-});
 
 // 管理者予約確認（accordion UI 対応）
 app.get('/admin/reservations', (req, res) => {

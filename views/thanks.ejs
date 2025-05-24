@@ -1,13 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <title>予約完了</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background-color: #f4f7fb;
+      font-family: "Helvetica Neue", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .message-box {
+      background-color: white;
+      padding: 2rem 3rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+    }
+
+    h1 {
+      color: #28a745;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      color: #555;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+    }
+
+    a {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background-color 0.2s;
+    }
+
+    a:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
 
-<h1>ご予約ありがとうございます！</h1>
+  <div class="message-box">
+    <h1>ご予約ありがとうございます！</h1>
+    <p>当日は開始時間の10分前には集合してください。</p>
+    <p>キャンセルはマイページから可能です。</p>
+    <p>詳細はメールでもお送りしています。</p>
+
 <a href="/">TOPに戻る</a>
+
+  </div>
+  
 
 </body>
 </html>

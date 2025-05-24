@@ -14,7 +14,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     margin: 0;
   }
 
@@ -89,10 +88,36 @@
   cursor: pointer;
   color: #888;
 }
+
+.notice {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #333;
+}
+.notice p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+
   </style>
 <body>
   
-  
+  <div class="page-container">
+  <div class="notice">
+    <h1>陸上教室予約システム（ポートフォリオ）</h1>
+    <p>このシステムはNode.js + Express + SQLiteで構築した予約管理アプリです。<br>
+    管理者・一般ユーザーでログインでき、スロット管理、メール通知などを実装しています。<br>
+  メール：test@mail.com　パスワード：test1234でログインすると全機能をご覧いただけます。</p>
+  </div>
   <div class="login-container">
     <% if (successMessages.length > 0) { %>
       <% successMessages.forEach(msg => { %>
@@ -115,6 +140,7 @@
     <button type="submit">ログイン</button>
   </form>
   <a href="/register">会員登録がまだの方</a>
+</div>
 </div>
 <script>
 function togglePassword(fieldId, toggleElement) {
