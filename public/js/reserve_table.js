@@ -186,11 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   
-  function closeModal() {
-    document.getElementById("confirm-modal").style.display = "none";
-    document.getElementById("modal-overlay").style.display = "none";
-  }
-
+  
 document.getElementById("reservation-form").addEventListener("submit", e => {
   e.preventDefault();
   if (!selectedSlotId) {
