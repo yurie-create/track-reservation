@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>レッスン予約</title>
+  
   <style>
  body {
       font-family: 'Helvetica Neue', sans-serif;
@@ -373,6 +374,66 @@ textarea {
   }
 }
 
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: 0.8em 1em;
+  border-bottom: 1px solid #ddd;
+  font-size: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.site-title {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  flex-wrap: wrap;
+  margin-top: 0.5em;
+}
+
+.nav-button {
+  background-color: #66cc99;
+  color: white;
+  padding: 0.4em 0.8em;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.0rem;
+  transition: background-color 0.3s;
+}
+
+.nav-button:hover {
+  background-color: #45a049;
+}
+
+.user-name {
+  font-weight: bold;
+  margin-right: 0.5em;
+  color: #333;
+}
+
+@media screen and (max-width: 600px) {
+  .top-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .nav-right {
+    justify-content: flex-start;
+    width: 100%;
+    margin-top: 0.5em;
+  }
+}
+
+
 
 
 
@@ -380,8 +441,29 @@ textarea {
   </style>
 </head>
 <body>
+  <header class="top-nav">
+    <div class="nav-left">
+      <span class="site-title">SiegSports</span>
+    </div>
+    <div class="nav-right">
+      <% if (user) { %>
+        <span class="user-name"><%= user.name %> さん</span>
+        <a href="/mypage" class="nav-button">マイページ</a>
+        <form action="/logout" method="POST" style="display:inline;">
+          <button type="submit" class="nav-button">ログアウト</button>
+        </form>
+      <% } else { %>
+        <a href="/login" class="nav-button">ログイン</a>
+        <a href="/register" class="nav-button">新規登録</a>
+      <% } %>
+    </div>
+  </header>
+  
+  
   <div class="container">
     <h1>レッスン予約</h1>
+    
+    
 
     <!-- コーチ選択 -->
     <div class="section-title">コーチ選択</div>
@@ -415,7 +497,7 @@ textarea {
       <label>コメント:</label>
       <textarea name="note" placeholder="コーチに伝えたいことやご要望があればご記入ください。"></textarea>
       <input type="hidden" id="selected-slot-id" name="slot_id">
-      <button type="submit" disabled>予約する</button>
+      <button type="submit">予約する</button>
     </form>
   </div>
 
@@ -426,17 +508,20 @@ textarea {
     <button id="confirm-submit">確定</button>
     <button onclick="closeModal()">キャンセル</button>
   </div>
-
-  <script>
-    window.CURRENT_USER_ID = <%= user.id %>;
-  </script>
   <script>
     function closeModal() {
-      document.getElementById('confirm-modal').style.display = 'none';
-      document.getElementById('modal-overlay').style.display = 'none';
+      document.getElementById("confirm-modal").style.display = "none";
+      document.getElementById("modal-overlay").style.display = "none";
     }
   </script>
   
-  <script src="js/reserve_table.js"></script>
+ 
+  
+  <script>
+    window.CURRENT_USER_ID = <%- JSON.stringify(user ? user.id : null) %>;
+    console.log("👤 CURRENT_USER_ID from EJS:", window.CURRENT_USER_ID);
+  </script>
+  <script src="/js/reserve_table.js"></script>
+  
 </body>
 </html>

@@ -140,27 +140,16 @@ app.use(bodyParser.json());
 
 // セッション設定
 app.use(session({
-  secret: 'secret_key',
-  resave: false,
-  saveUninitialized: true
-}));
-
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.urlencoded({ extended: true }));
-
-app.use((req, res, next) => {
-  const publicPaths = ['/login', '/register'];
-  if (!req.session.user && !publicPaths.includes(req.originalUrl)) {
-    return res.redirect('/login');
-  }
-  next();
-});
-
-app.use(session({
   secret: 'your-secret-key',
   resave: false,
   saveUninitialized: true
 }));
+
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
+
+
 
 app.use(flash());
 app.use('/admin', adminRoutes);
@@ -168,6 +157,23 @@ app.use('/admin', adminCoursesRouter);
 // ルーティング
 app.use('/api', apiRoutes);
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use((req, res, next) => {
+  const publicPaths = ['/', '/login', '/register'];
+  
+  // APIや静的ファイルなどは除外する
+  const isPublic = publicPaths.includes(req.originalUrl) ||
+                   req.originalUrl.startsWith('/api') ||
+                   req.originalUrl.startsWith('/js') ||
+                   req.originalUrl.startsWith('/css') ||
+                   req.originalUrl.startsWith('/images');
+
+  if (!req.session.user && !isPublic) {
+    return res.redirect('/login');
+  }
+  next();
+});
+
 
 // ビューエンジンの設定 (EJS)
 app.set('view engine', 'ejs');
@@ -180,6 +186,7 @@ app.get('/login', (req, res) => {
   const successMessages = req.flash('success');
   res.render('login', { successMessages });
   });
+
   app.get('/register', (req, res) => {
     res.render('register');
   });
@@ -209,11 +216,13 @@ app.get('/login', (req, res) => {
       }
     );
   });
-// ルーティング
-app.get('/', (req, res) => {
-  const user = req.session.user;
-  res.render('index', {user});
-});
+
+  app.get('/', (req, res) => {
+    const date = req.query.date || null; 
+    const user = req.session.user || null;
+    res.render('reserve', { date, user });
+  });
+  
 
 app.post('/logout', (req, res) => {
   req.session.destroy(() => {
@@ -278,6 +287,12 @@ app.get('/register', (req, res) => {
       console.error(err);
       res.status(500).send('登録時にエラーが発生しました');
     }
+  });
+  
+  app.get('/mypage', (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.redirect('/login');
+    res.render('index', { user });
   });
   
   
@@ -675,12 +690,7 @@ app.post('/admin/enable-slot', (req, res) => {
 
 
 
-app.get('/reserve', (req, res) => {
-  const date = req.query.date;
-  const user = req.session.user;  // ← セッションから user を取得
-  if (!user) return res.redirect('/login');  // ログインしていない場合はログインへ
-  res.render('reserve', { date, user });
-});
+
 
 app.post('/reserve', (req, res) => {
   const user = req.session.user;
